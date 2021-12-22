@@ -15,20 +15,6 @@ class ShovelerPipeline(bspump.Pipeline):
 		super().__init__(app, pipeline_id)
 
 		shovel_rack = {
-			"source": {
-				"ElasticSearch": bspump.elasticsearch.ElasticSearchSource(
-					app,
-					self,
-					"FastKafkaConnection",
-					id="FastKafkaSource",
-				),
-				"FastKafka": fastkafka.FastKafkaSource(
-					app,
-					self,
-					"FastKafkaConnection",
-					id="FastKafkaSource",
-				),
-			},
 			"sink": {
 				"ElasticSearch": bspump.elasticsearch.ElasticSearchSink(
 					app, self, "ElasticSearchConnection"
@@ -57,13 +43,18 @@ class ShovelerPipeline(bspump.Pipeline):
 		}
 
 		if (
-			"pipeline:ShovelerPipeline:ElasticSearchSink"
+			"pipeline:ShovelerPipeline:FastKafkaSource"
 			in asab.Config
-			and "pipeline:ShovelerPipeline:FastKafkaSource"
+			and "pipeline:ShovelerPipeline:ElasticSearchSink"
 			in asab.Config
 		):
 			pipeline = [
-				shovel_rack.get("source").get("FastKafka"),
+				fastkafka.FastKafkaSource(
+					app,
+					self,
+					"FastKafkaConnection",
+					id="FastKafkaSource",
+				),
 				shovel_rack.get("utility").get(
 					"BYTEStoSTRING"
 				),
@@ -82,8 +73,11 @@ class ShovelerPipeline(bspump.Pipeline):
 			in asab.Config
 		):
 			pipeline = [
-				shovel_rack.get("source").get(
-					"ElasticSearch"
+				bspump.elasticsearch.ElasticSearchSource(
+					app,
+					self,
+					"ElasticSearchConnection",
+					id="ElasticSearchSource",
 				),
 				shovel_rack.get("utility").get(
 					"DICTtoJSON"
