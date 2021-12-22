@@ -23,12 +23,6 @@ build docker:
     # Execute only for master branch
     - master
 
-  before_script:
-    - docker info
-    - git submodule set-url splang/ http://$DEPLOY_TOKEN_USER:$DEPLOY_TOKEN@gitlab.teskalabs.int/lmio/sp-lang.git
-    - git submodule init
-    - git submodule update
-
     # We want to run in the clean environment
     - docker system prune -f
 
