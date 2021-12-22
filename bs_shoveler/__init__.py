@@ -1,7 +1,7 @@
-from .pipeline import ShovelerPipeline
 from .app import BSShovelerApp
+from .pipeline import ShovelerPipeline
 
 __all__ = [
-	"ShovelerPipeline",
 	"BSShovelerApp",
+	"ShovelerPipeline",
 ]
