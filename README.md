@@ -1,4 +1,5 @@
 # BS-Shoveler
+
 When you need events shoveled from one place to another, plain and simple.
 
 ## Configuration
@@ -47,3 +48,8 @@ index=<shovel from here>
 topic=<shovel to here>
 
 ```
+
+## Motto
+
+> Je kachnam zima na nohy?  
+> _Vladimira Teskova_
