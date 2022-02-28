@@ -15,19 +15,16 @@ class ShovelerPipeline(bspump.Pipeline):
 	def __init__(self, app, pipeline_id):
 		super().__init__(app, pipeline_id)
 
+		# TODO: need to rethink the rack if there will be a possibility, that one of
+		# the connections does not exist. It causes error when connection is not located
+		# removing ES and Influx sinks from the rack for the moment.
 		shovel_rack = {
 			"sink": {
-				"ElasticSearch": bspump.elasticsearch.ElasticSearchSink(
-					app, self, "ElasticSearchConnection"
-				),
 				"FastKafka": fastkafka.FastKafkaSink(
 					app,
 					self,
 					"FastKafkaConnection",
 					id="FastKafkaSink",
-				),
-				"InfluxDBSink": bspump.influxdb.InfluxDBSink(
-					app, self, "InfluxConnection"
 				)
 			},
 			"utility": {
@@ -65,8 +62,8 @@ class ShovelerPipeline(bspump.Pipeline):
 				shovel_rack.get("utility").get(
 					"JSONtoDICT"
 				),
-				shovel_rack.get("sink").get(
-					"ElasticSearch"
+				bspump.elasticsearch.ElasticSearchSink(
+					app, self, "ElasticSearchConnection"
 				),
 			]
 
@@ -105,7 +102,9 @@ class ShovelerPipeline(bspump.Pipeline):
 					"FastKafkaConnection",
 					id="FastKafkaSource",
 				),
-				shovel_rack.get("sink").get("InfluxDBSink"),
+				bspump.influxdb.InfluxDBSink(
+					app, self, "InfluxConnection"
+				),
 			]
 
 		else:
