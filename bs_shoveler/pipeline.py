@@ -1,6 +1,7 @@
 import asab
 import bspump
 import bspump.common
+import bspump.influxdb
 import bspump.elasticsearch
 
 import fastkafka
@@ -25,6 +26,9 @@ class ShovelerPipeline(bspump.Pipeline):
 					"FastKafkaConnection",
 					id="FastKafkaSink",
 				),
+				"InfluxDBSink": bspump.influxdb.InfluxDBSink(
+					app, self, "InfluxConnection"
+				)
 			},
 			"utility": {
 				"JSONtoDICT": bspump.common.StdJsonToDictParser(
@@ -86,6 +90,22 @@ class ShovelerPipeline(bspump.Pipeline):
 					"STRINGtoBYTES"
 				),
 				shovel_rack.get("sink").get("FastKafka"),
+			]
+
+		elif (
+			"pipeline:ShovelerPipeline:FastKafkaSource"
+			in asab.Config
+			and "connection:InfluxConnection"
+			in asab.Config
+		):
+			pipeline = [
+				fastkafka.FastKafkaSource(
+					app,
+					self,
+					"FastKafkaConnection",
+					id="FastKafkaSource",
+				),
+				shovel_rack.get("sink").get("InfluxDBSink"),
 			]
 
 		else:

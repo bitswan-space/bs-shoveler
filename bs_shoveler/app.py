@@ -1,6 +1,8 @@
 import bspump
 import bspump.lookup
 import bspump.elasticsearch
+import bspump.influxdb
+import asab
 
 import fastkafka
 
@@ -12,26 +14,40 @@ L = logging.getLogger(__name__)
 
 
 class BSShovelerApp(bspump.BSPumpApplication):
-	def __init__(self):
-		super().__init__()
-		self.BSPumpService = self.get_service(
-			"bspump.PumpService"
-		)
+    def __init__(self):
+        super().__init__()
+        self.BSPumpService = self.get_service(
+            "bspump.PumpService"
+        )
 
-		fast_kafka_connection = (
-			fastkafka.FastKafkaConnection(
-				self, "FastKafkaConnection"
-			)
-		)
-		self.BSPumpService.add_connection(
-			fast_kafka_connection
-		)
-		es_connection = (
-			bspump.elasticsearch.ElasticSearchConnection(
-				self, "ElasticSearchConnection"
-			)
-		)
-		self.BSPumpService.add_connection(es_connection)
-		self.BSPumpService.add_pipeline(
-			ShovelerPipeline(self, "ShovelerPipeline")
-		)
+        fast_kafka_connection = (
+            fastkafka.FastKafkaConnection(
+                self, "FastKafkaConnection"
+            )
+        )
+        self.BSPumpService.add_connection(
+            fast_kafka_connection
+        )
+
+        if "connection:ElasticSearchConnection" in asab.Config:
+            es_connection = (
+                bspump.elasticsearch.ElasticSearchConnection(
+                    self, "ElasticSearchConnection"
+                )
+            )
+            self.BSPumpService.add_connection(es_connection)
+
+        elif "connection:InfluxConnection" in asab.Config:
+            influxdb_connection = (
+                bspump.influxdb.InfluxDBConnection(
+                    self, "InfluxConnection"
+                )
+            )
+            self.BSPumpService.add_connection(influxdb_connection)
+
+        else:
+            L.error("Please add connection(s)")
+
+        self.BSPumpService.add_pipeline(
+            ShovelerPipeline(self, "ShovelerPipeline")
+        )
