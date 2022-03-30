@@ -1,4 +1,4 @@
-FROM teskalabs/bspump:nightly AS builder
+FROM teskalabs/bspump:nightly
 
 # http://bugs.python.org/issue19846
 # > At the moment, setting "LANG=C" on a Linux system *fundamentally breaks Python 3*, and that's not OK.
@@ -37,9 +37,7 @@ COPY ./CHANGELOG.md /app/
 # Create manifest
 RUN apt-get update && apt-get install --assume-yes git
 COPY .git /app/bs_shoveler/.git
-RUN wget 'https://github.com/TeskaLabs/asab/blob/master/asab-manifest.py?raw=true' -O /app/bs_shoveler/asab-manifest.py
-RUN chmod +x /app/bs_shoveler/asab-manifest.py
 WORKDIR /app/bs_shoveler
-RUN ./asab-manifest.py /app/MANIFEST.json
+RUN python3 /usr/local/bin/asab-manifest.py /app/MANIFEST.json
 
 CMD ["python3", "/app/bs_shoveler/bs_shoveler.py", "-c", "/conf/bs_shoveler.conf"]
