@@ -30,13 +30,13 @@ RUN ldconfig
 RUN pip3 install --no-cache-dir git+https://lmiodeploy:bR88sBTwX6ys5b2d47cG@gitlab.com/TeskaLabs/fastkafka@f5dc0a932928f296b1a585a4b9cf2ac23101daf0
 RUN pip3 install xxhash
 
-COPY ./bs_shoveler /app/bs_shoveler/bs_shoveler
-COPY ./bs_shoveler.py /app/bs_shoveler/bs_shoveler.py
+COPY . /app/bs_shoveler/
 COPY ./CHANGELOG.md /app/
 
 # Create manifest
 RUN apt-get update && apt-get install --assume-yes git
 COPY .git /app/bs_shoveler/.git
+COPY .gitignore /app/bs_shoveler/.gitignore
 WORKDIR /app/bs_shoveler
 RUN python3 /usr/local/bin/asab-manifest.py /app/MANIFEST.json
 
