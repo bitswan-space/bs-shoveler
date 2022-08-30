@@ -37,6 +37,7 @@ COPY ./CHANGELOG.md /app/
 RUN apt-get update && apt-get install --assume-yes git
 COPY .git /app/bs_shoveler/.git
 COPY .gitignore /app/bs_shoveler/.gitignore
+RUN pip install influxdb
 WORKDIR /app/bs_shoveler
 RUN python3 /usr/local/bin/asab-manifest.py /app/MANIFEST.json
 
