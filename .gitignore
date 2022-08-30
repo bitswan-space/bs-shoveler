@@ -1,3 +1,5 @@
 .idea/
 local.conf
 __pycache__/
+*.conf
+.gz
