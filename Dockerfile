@@ -35,6 +35,7 @@ COPY ./CHANGELOG.md /app/
 
 # Create manifest
 RUN apt-get update && apt-get install --assume-yes git
+RUN pip install influxdb
 COPY .git /app/bs_shoveler/.git
 COPY .gitignore /app/bs_shoveler/.gitignore
 WORKDIR /app/bs_shoveler

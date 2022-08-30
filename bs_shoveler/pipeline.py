@@ -10,6 +10,8 @@ import logging
 
 L = logging.getLogger(__name__)
 
+from .processors.convert_to_influx_string import InfluxStringConvertProcessor
+
 
 class ShovelerPipeline(bspump.Pipeline):
 	def __init__(self, app, pipeline_id):
@@ -102,6 +104,8 @@ class ShovelerPipeline(bspump.Pipeline):
 					"FastKafkaConnection",
 					id="FastKafkaSource",
 				),
+				InfluxStringConvertProcessor(app, self),
+				bspump.common.PPrintProcessor(app, self),
 				bspump.influxdb.InfluxDBSink(
 					app, self, "InfluxConnection"
 				),
