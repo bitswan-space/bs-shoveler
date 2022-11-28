@@ -18,7 +18,8 @@ class ShovelerPipeline(bspump.Pipeline):
 
 		# TODO: need to rethink the rack if there will be a possibility, that one of
 		# the connections does not exist. It causes error when connection is not located
-		# removing ES and Influx sinks from the rack for the moment.
+		# removing ES:
+		# influx added
 		shovel_rack = {
 			"sink": {
 				"FastKafka": fastkafka.FastKafkaSink(
