@@ -6,13 +6,10 @@ import bspump.common
 import bspump.influxdb
 import bspump.elasticsearch
 
-
-
+from .processors.convert_to_influx_string import InfluxStringConvertProcessor
 
 
 L = logging.getLogger(__name__)
-
-from .processors.convert_to_influx_string import InfluxStringConvertProcessor
 
 
 class ShovelerPipeline(bspump.Pipeline):
