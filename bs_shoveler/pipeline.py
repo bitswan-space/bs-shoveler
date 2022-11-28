@@ -1,12 +1,14 @@
 import asab
 import bspump
+import logging
+import fastkafka
 import bspump.common
 import bspump.influxdb
 import bspump.elasticsearch
 
-import fastkafka
 
-import logging
+
+
 
 L = logging.getLogger(__name__)
 
@@ -97,6 +99,7 @@ class ShovelerPipeline(bspump.Pipeline):
 			and "connection:InfluxConnection"
 			in asab.Config
 		):
+			print("-------------hit------------")
 			pipeline = [
 				fastkafka.FastKafkaSource(
 					app,
@@ -104,8 +107,11 @@ class ShovelerPipeline(bspump.Pipeline):
 					"FastKafkaConnection",
 					id="FastKafkaSource",
 				),
-				InfluxStringConvertProcessor(app, self),
+				bspump.common.BytesToStringParser(app, self),
+				bspump.common.StdJsonToDictParser(app, self),
 				bspump.common.PPrintProcessor(app, self),
+				InfluxStringConvertProcessor(app, self),
+				bspump.common.StringToBytesParser(app, self),
 				bspump.influxdb.InfluxDBSink(
 					app, self, "InfluxConnection"
 				),
