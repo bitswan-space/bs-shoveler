@@ -55,6 +55,7 @@ class InfluxStringConvertProcessor(bspump.Processor):
             L.warning("datetime_id was not found in the event:", event)
 
     # returns list of fields from event
+    # test
     # def get_event_fields(self, event):
     #     keys = []
     #     if (event is dict):
