@@ -9,10 +9,15 @@ L = logging.getLogger(__name__)
 class InfluxStringConvertProcessor(bspump.Processor):
     def __init__(self, app, pipeline, id=None, config=None):
         super().__init__(app, pipeline, id=None, config=None)
-
+        # self.first_event_processed = 0
+        # self.event_fields = []
+        # self.ignore_fields = ["eutrancell", "site"]
 
     def process(self, context, event):
-
+        # called only when processing the first event
+        # if (not self.first_event_processed):
+        #     self.event_fields = self.get_event_fields(event)
+        #     self.first_event_processed = 1
 
         if "datetime_id" in event:
             influx_string_dict = {
@@ -49,7 +54,16 @@ class InfluxStringConvertProcessor(bspump.Processor):
         else:
             L.warning("datetime_id was not found in the event:", event)
 
-
+    # returns list of fields from event
+    # def get_event_fields(self, event):
+    #     keys = []
+    #     if (event is dict):
+    #         keys = [i for i in self.event_fields.keys()]
+    #         keys.remove("site")
+    #         keys.remove("eutrancell")
+    #     else:
+    #         L.warning("in function get_events_fields something else than dict was passed as the parameters. Nothings happens")
+    #     return keys
 
     def get_timestamp(self, time):
         utc_time = datetime.strptime("{}".format(time), "%Y-%m-%d %H:%M:%S")
