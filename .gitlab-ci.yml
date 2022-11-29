@@ -5,11 +5,13 @@ stages:
 test flake8:
   stage: test
   image: python:3.8
+  tags:
+    - docker
   script:
     - apt-get update
     - pip install --upgrade pip
     - pip install flake8
-    - python3 -m flake8 bs_shoveler bs_shoveler.py
+    - python3 -m flake8 ericsson2g ericsson2g_app.py
 
 build docker:
   stage: build
@@ -21,7 +23,10 @@ build docker:
 
   only:
     # Execute only for master branch
-    - master
+    - main
+
+  before_script:
+    - docker info
 
     # We want to run in the clean environment
     - docker system prune -f
@@ -36,6 +41,7 @@ build docker:
     # Clean-up
     - docker container prune -f > /dev/null 2> /dev/null
     - docker image prune -a -f > /dev/null 2> /dev/null
+
 
 build docker-tag:
   stage: build
