@@ -20,8 +20,8 @@ class InfluxStringConvertProcessor(bspump.Processor):
         #     self.first_event_processed = 1
 
         if "datetime_id" in event:
-            influx_string_dict = {
-                "measurement": "ran",
+            influx_string_dict = [{
+                "measurement": "{}".format(self.Config['table_name']),
                 "tags": {
                     "eutrancell": event.get("eutrancell", float("NaN")),
                     "NRCellCU": event.get("NRCellCU", float("NaN"))
@@ -43,7 +43,7 @@ class InfluxStringConvertProcessor(bspump.Processor):
                     "UL_MAC_TRAFFIC_GB": event.get("UL_MAC_TRAFFIC_GB"),
                     "CELL_AVAILABILITY": event.get("CELL_AVAILABILITY")
                 }
-            }
+            }]
 
             for field in self.event_fields:
                 influx_string_dict = influx_string_dict["fields"][field] = event[field]
