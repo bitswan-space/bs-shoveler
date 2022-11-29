@@ -47,7 +47,7 @@ class InfluxStringConvertProcessor(bspump.Processor):
 
             # for field in self.event_fields:
             #     influx_string_dict = influx_string_dict["fields"][field] = event[field]
-            # influx_string_dict = [influx_string_dict]
+            # influx_string_dict = [influx_string_dict] 
             event = make_lines({'points': influx_string_dict})
             print(event)
             return event
