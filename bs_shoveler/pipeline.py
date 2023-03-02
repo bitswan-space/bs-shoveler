@@ -43,6 +43,27 @@ class ShovelerPipeline(bspump.Pipeline):
 			},
 		}
 
+		if(
+			"pipeline:ShovelerPipeline:FastKafkaSource"
+			in asab.Config
+			and "pipeline:ShovelerPipeline:FastKafkaSink"
+			in asab.Config
+		):
+			pipeline = [
+				fastkafka.FastKafkaSource(
+					app,
+					self,
+					"FastKafkaConnectionA",
+					id="FastKafkaSource",
+				),
+				fastkafka.FastKafkaSink(
+					app,
+					self,
+					"FastKafkaConnectionB",
+					id="FastKafkaSink",
+				)
+			]
+
 		if (
 			"pipeline:ShovelerPipeline:FastKafkaSource"
 			in asab.Config
