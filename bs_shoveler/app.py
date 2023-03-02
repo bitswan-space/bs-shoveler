@@ -27,6 +27,27 @@ class BSShovelerApp(bspump.BSPumpApplication):
 				self, "FastKafkaConnection"
 			)
 		)
+
+		if "connection:FastKafkaConnectionA" in asab.Config:
+			fast_kafka_connection_a = (
+				fastkafka.FastKafkaConnection(
+					self, "FastKafkaConnectionA"
+				)
+			)
+			self.BSPumpService.add_connection(
+				fast_kafka_connection_a
+			)
+
+		if "connection:FastKafkaConnectionB" in asab.Config:
+			fast_kafka_connection_b = (
+				fastkafka.FastKafkaConnection(
+					self, "FastKafkaConnectionB"
+				)
+			)
+			self.BSPumpService.add_connection(
+				fast_kafka_connection_b
+			)
+
 		self.BSPumpService.add_connection(
 			fast_kafka_connection
 		)
