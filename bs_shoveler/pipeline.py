@@ -43,7 +43,7 @@ class ShovelerPipeline(bspump.Pipeline):
 			},
 		}
 
-		if(
+		if (
 			"pipeline:ShovelerPipeline:FastKafkaSource"
 			in asab.Config
 			and "pipeline:ShovelerPipeline:FastKafkaSink"
