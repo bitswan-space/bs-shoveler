@@ -53,18 +53,13 @@ class ShovelerPipeline(bspump.Pipeline):
 				fastkafka.FastKafkaSource(
 					app,
 					self,
-					"FastKafkaConnectionA",
+					"FastKafkaConnectionSource",
 					id="FastKafkaSource",
 				),
-				fastkafka.FastKafkaSink(
-					app,
-					self,
-					"FastKafkaConnectionB",
-					id="FastKafkaSink",
-				)
+				shovel_rack.get("sink").get("FastKafka")
 			]
 
-		if (
+		elif (
 			"pipeline:ShovelerPipeline:FastKafkaSource"
 			in asab.Config
 			and "pipeline:ShovelerPipeline:ElasticSearchSink"
@@ -111,7 +106,7 @@ class ShovelerPipeline(bspump.Pipeline):
 			]
 
 		elif (
-			"pipeline:ShovelerPipeline:FastKafkaSource"
+			"pipeline:ShovelerPipeline:KafkaSource"
 			in asab.Config
 			and "connection:InfluxConnection"
 			in asab.Config
