@@ -106,7 +106,7 @@ class ShovelerPipeline(bspump.Pipeline):
 			]
 
 		elif (
-			"pipeline:ShovelerPipeline:KafkaSource"
+			"pipeline:ShovelerPipeline:FastKafkaSource"
 			in asab.Config
 			and "connection:InfluxConnection"
 			in asab.Config

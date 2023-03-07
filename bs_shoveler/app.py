@@ -7,7 +7,7 @@ import asab.api
 import asab.zookeeper
 
 # import Kafka
-import bspump.kafka
+import fastkafka
 
 import logging
 
@@ -24,19 +24,19 @@ class BSShovelerApp(bspump.BSPumpApplication):
 		)
 
 		fast_kafka_connection = (
-			bspump.kafka.KafkaConnection(
+			fastkafka.FastKafkaConnection(
 				self, "FastKafkaConnection"
 			)
 		)
 
-		kafka_connection_source = (
-			bspump.kafka.KafkaConnection(
-				self, "KafkaConnectionSource"
+		fast_kafka_connection_source = (
+			fastkafka.FastKafkaConnection(
+				self, "FastKafkaConnectionSource"
 			)
 		)
 
 		self.BSPumpService.add_connection(
-			kafka_connection_source
+			fast_kafka_connection_source
 		)
 
 		self.BSPumpService.add_connection(
@@ -71,8 +71,8 @@ class BSShovelerApp(bspump.BSPumpApplication):
 		self.ASABApiService = asab.api.ApiService(self)
 		self.ASABApiService.initialize_web()
 
-		# Initialize ZooKeeper Service
-		from asab.zookeeper import Module
-		self.add_module(Module)
-		self.ZooKeeperService = self.get_service("asab.ZooKeeperService")
-		self.ASABApiService.initialize_zookeeper(self.ZooKeeperService.DefaultContainer)
+		# # Initialize ZooKeeper Service
+		# from asab.zookeeper import Module
+		# self.add_module(Module)
+		# self.ZooKeeperService = self.get_service("asab.ZooKeeperService")
+		# self.ASABApiService.initialize_zookeeper(self.ZooKeeperService.DefaultContainer)

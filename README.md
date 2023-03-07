@@ -56,9 +56,27 @@ index=<shovel from here>
 [pipeline:ShovelerPipeline:FastKafkaSink]
 topic=<shovel to here>
 
+
+# kafka-connection test tmp
+#kafkasink
+[connection:KafkaConnectionSource]
+bootstrap_servers=10.42.131.21:9092,10.42.131.22:9092,10.42.131.23:9092
+
+#kafkasource
+[connection:KafkaConnection]
+bootstrap_servers=o2sk-kafka-1:9092,o2sk-kafka-2:9092,o2sk-kafka-3:9092
+
+[pipeline:ShovelerPipeline:KafkaSource]
+topic=mob-ossr-o2ind
+group_id=la-bs-telco-sbr-test
+
+[pipeline:ShovelerPipeline:KafkaSink]
+topic=test_B
+
+
 ```
 
 ## Motto
 
-> Je kachnam zima na nohy?  
+> Je kachnam zima na nohy?
 > _Vladimira Teskova_
