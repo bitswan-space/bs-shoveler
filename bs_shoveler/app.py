@@ -65,13 +65,3 @@ class BSShovelerApp(bspump.BSPumpApplication):
 		self.BSPumpService.add_pipeline(
 			ShovelerPipeline(self, "ShovelerPipeline")
 		)
-
-
-		self.add_module(asab.web.Module)
-		self.ASABApiService.initialize_web()
-
-		# Initialize ZooKeeper Service
-		from asab.zookeeper import Module
-		self.add_module(Module)
-		self.ZooKeeperService = self.get_service("asab.ZooKeeperService")
-		self.ASABApiService.initialize_zookeeper(self.ZooKeeperService.DefaultContainer)
