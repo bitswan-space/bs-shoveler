@@ -5,6 +5,8 @@ stages:
 test flake8:
   stage: test
   image: python:3.8
+  tags:
+    - docker
   script:
     - apt-get update
     - pip install --upgrade pip
