@@ -68,7 +68,6 @@ class BSShovelerApp(bspump.BSPumpApplication):
 
 
 		self.add_module(asab.web.Module)
-		self.ASABApiService = asab.api.ApiService(self)
 		self.ASABApiService.initialize_web()
 
 		# Initialize ZooKeeper Service
