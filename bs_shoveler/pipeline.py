@@ -122,7 +122,6 @@ class ShovelerPipeline(bspump.Pipeline):
 					app, self, "InfluxConnection"
 				),
 			]
-
 		else:
 			L.error("Please configure the pipeline")
 
