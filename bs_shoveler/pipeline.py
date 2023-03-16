@@ -97,7 +97,6 @@ class ShovelerPipeline(bspump.Pipeline):
 			and "connection:InfluxConnection"
 			in asab.Config
 		):
-			print("-------------hit------------")
 			pipeline = [
 				fastkafka.FastKafkaSource(
 					app,
