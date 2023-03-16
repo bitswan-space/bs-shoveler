@@ -107,9 +107,7 @@ class ShovelerPipeline(bspump.Pipeline):
 				),
 				bspump.common.BytesToStringParser(app, self),
 				bspump.common.StdJsonToDictParser(app, self),
-				bspump.common.PPrintProcessor(app, self),
 				InfluxStringConvertProcessor(app, self),
-				bspump.common.StringToBytesParser(app, self),
 				bspump.influxdb.InfluxDBSink(
 					app, self, "InfluxConnection"
 				),
