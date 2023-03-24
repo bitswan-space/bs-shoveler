@@ -15,27 +15,27 @@ class InfluxStringConvertProcessor(bspump.Processor):
 
         if "datetime_id" in event:
             influx_string_dict = [{
-                "measurement": "{}".format(self.Config['table_name']),
+                "measurement": "table1",
                 "tags": {
-                    "eutrancell": event.get("eutrancell", float("NaN")),
+                    "site": event.get("site", float("NaN")),
                     "NRCellCU": event.get("NRCellCU", float("NaN"))
                 },
                 "time": event.get("timestamp"),
                 "fields": {
-                    "UE_Context_Setup_Success_Rate": event.get("UE_Context_Setup_Success_Rate"),
-                    "Random_Access_Success_Rata": event.get("Random_Access_Success_Rata"),
-                    "Avg_DL_MAC_Cell_Throughput_Mbps": event.get("Avg_DL_MAC_Cell_Throughput_Mbps"),
-                    "Avg_DL_MAC_Cell_Throughput_consid_traff_Mbps": event.get("Avg_DL_MAC_Cell_Throughput_consid_traff_Mbps"),
-                    "Avg_DL_MAC_Cell_Throughput_PDSCH_Mbps": event.get("Avg_DL_MAC_Cell_Throughput_PDSCH_Mbps"),
-                    "Avg_DL_MAC_DRB_Throughput_Mbps": event.get("Avg_DL_MAC_DRB_Throughput_Mbps"),
-                    "Avg_UL_MAC_Cell_Throughput_Mbps": event.get("Avg_UL_MAC_Cell_Throughput_Mbps"),
-                    "Avg_UL_MAC_Cell_Throughput_consid_traff_Mbps": event.get("Avg_UL_MAC_Cell_Throughput_consid_traff_Mbps"),
-                    "Avg_UL_MAC_Cell_Throughput_PUSCH_Mbps": event.get("Avg_UL_MAC_Cell_Throughput_PUSCH_Mbps"),
-                    "AVG_UL_MAC_UE_Throughput": event.get("AVG_UL_MAC_UE_Throughput"),
-                    "AVG_DL_MAC_UE_Throughput": event.get("AVG_DL_MAC_UE_Throughput"),
-                    "DL_MAC_TRAFFIC_GB": event.get("DL_MAC_TRAFFIC_GB"),
-                    "UL_MAC_TRAFFIC_GB": event.get("UL_MAC_TRAFFIC_GB"),
-                    "CELL_AVAILABILITY": event.get("CELL_AVAILABILITY")
+                    "UE_Context_Setup_Success_Rate": float(event.get("UE_Context_Setup_Success_Rate",0.0)),
+                    "Random_Access_Success_Rata": float(event.get("Random_Access_Success_Rata",0.0)),
+                    "Avg_DL_MAC_Cell_Throughput_Mbps": float(event.get("Avg_DL_MAC_Cell_Throughput_Mbps",0.0)),
+                    "Avg_DL_MAC_Cell_Throughput_consid_traff_Mbps": float(event.get("Avg_DL_MAC_Cell_Throughput_consid_traff_Mbps",0.0)),
+                    "Avg_DL_MAC_Cell_Throughput_PDSCH_Mbps": float(event.get("Avg_DL_MAC_Cell_Throughput_PDSCH_Mbps",0.0)),
+                    "Avg_DL_MAC_DRB_Throughput_Mbps": float(event.get("Avg_DL_MAC_DRB_Throughput_Mbps",0.0)),
+                    "Avg_UL_MAC_Cell_Throughput_Mbps": float(event.get("Avg_UL_MAC_Cell_Throughput_Mbps",0.0)),
+                    "Avg_UL_MAC_Cell_Throughput_consid_traff_Mbps": float(event.get("Avg_UL_MAC_Cell_Throughput_consid_traff_Mbps",0.0)),
+                    "Avg_UL_MAC_Cell_Throughput_PUSCH_Mbps": float(event.get("Avg_UL_MAC_Cell_Throughput_PUSCH_Mbps",0.0)),
+                    "AVG_UL_MAC_UE_Throughput": float(event.get("AVG_UL_MAC_UE_Throughput",0.0)),
+                    "AVG_DL_MAC_UE_Throughput": float(event.get("AVG_DL_MAC_UE_Throughput",0.0)),
+                    "DL_MAC_TRAFFIC_GB": float(event.get("DL_MAC_TRAFFIC_GB",0.0)),
+                    "UL_MAC_TRAFFIC_GB": float(event.get("UL_MAC_TRAFFIC_GB",0.0)),
+                    "CELL_AVAILABILITY": float(event.get("CELL_AVAILABILITY",0.0))
                 }
             }]
 
