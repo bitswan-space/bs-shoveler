@@ -15,7 +15,7 @@ class InfluxStringConvertProcessor(bspump.Processor):
 
         if "datetime_id" in event:
             influx_string_dict = [{
-                "measurement": "table1",
+                "measurement": "{}".format(self.Config['table_name']),
                 "tags": {
                     "site": event.get("site", float("NaN")),
                     "NRCellCU": event.get("NRCellCU", float("NaN"))
