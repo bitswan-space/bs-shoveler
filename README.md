@@ -57,8 +57,3 @@ index=<shovel from here>
 topic=<shovel to here>
 
 ```
-
-## Motto
-
-> Je kachnam zima na nohy?  
-> _Vladimira Teskova_
