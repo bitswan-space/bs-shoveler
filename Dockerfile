@@ -1,34 +1,10 @@
-FROM teskalabs/bspump:nightly
+FROM public.ecr.aws/h9w9d7v3/bspump:2023-39-git-8444683
 
-# http://bugs.python.org/issue19846
-# > At the moment, setting "LANG=C" on a Linux system *fundamentally breaks Python 3*, and that's not OK.
-ENV LANG C.UTF-8
+LABEL src=https://gitlab.com/LibertyAces/O2SK/ericsson-2g
 
-RUN apt-get update
-RUN pip3 install --no-cache-dir cython
-
-# Install fastkafka
-RUN apt-get -y install \
-	curl \
-	make \
-	gcc \
-	g++ \
-	libc-dev \
-	libz-dev \
-	libzstd-dev \
-	wget
-
-RUN apt-get -y install git
-RUN curl -O -L https://github.com/edenhill/librdkafka/archive/v1.5.2.tar.gz --silent --fail \
-	&& tar xzf v1.5.2.tar.gz \
-	&& cd librdkafka-1.5.2 \
-	&& ./configure \
-	&& cd src \
-	&& make \
-	&& make install
-RUN ldconfig
-RUN pip3 install --no-cache-dir git+https://lmiodeploy:bR88sBTwX6ys5b2d47cG@gitlab.com/TeskaLabs/fastkafka@f5dc0a932928f296b1a585a4b9cf2ac23101daf0
-RUN pip3 install xxhash
+RUN set -ex \
+&& apt-get -y update \
+&& apt-get -y upgrade
 
 COPY . /app/bs_shoveler/
 COPY ./CHANGELOG.md /app/

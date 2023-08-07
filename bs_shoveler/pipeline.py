@@ -4,8 +4,7 @@ import bspump.common
 import bspump.influxdb
 import bspump.elasticsearch
 
-import fastkafka
-
+import bspump.kafka
 import logging
 
 L = logging.getLogger(__name__)
@@ -20,11 +19,11 @@ class ShovelerPipeline(bspump.Pipeline):
 		# removing ES and Influx sinks from the rack for the moment.
 		shovel_rack = {
 			"sink": {
-				"FastKafka": fastkafka.FastKafkaSink(
+				"Kafka": bspump.kafka.KafkaSink(
 					app,
 					self,
-					"FastKafkaConnection",
-					id="FastKafkaSink",
+					"KafkaConnection",
+					id="KafkaSink",
 				)
 			},
 			"utility": {
@@ -44,17 +43,17 @@ class ShovelerPipeline(bspump.Pipeline):
 		}
 
 		if (
-			"pipeline:ShovelerPipeline:FastKafkaSource"
+			"pipeline:ShovelerPipeline:KafkaSource"
 			in asab.Config
 			and "pipeline:ShovelerPipeline:ElasticSearchSink"
 			in asab.Config
 		):
 			pipeline = [
-				fastkafka.FastKafkaSource(
+				bspump.kafka.KafkaSource(
 					app,
 					self,
-					"FastKafkaConnection",
-					id="FastKafkaSource",
+					"KafkaConnection",
+					id="KafkaSource",
 				),
 				shovel_rack.get("utility").get(
 					"BYTEStoSTRING"
@@ -70,7 +69,7 @@ class ShovelerPipeline(bspump.Pipeline):
 		elif (
 			"pipeline:ShovelerPipeline:ElasticSearchSource"
 			in asab.Config
-			and "pipeline:ShovelerPipeline:FastKafkaSink"
+			and "pipeline:ShovelerPipeline:KafkaSink"
 			in asab.Config
 		):
 			pipeline = [
@@ -86,21 +85,21 @@ class ShovelerPipeline(bspump.Pipeline):
 				shovel_rack.get("utility").get(
 					"STRINGtoBYTES"
 				),
-				shovel_rack.get("sink").get("FastKafka"),
+				shovel_rack.get("sink").get("Kafka"),
 			]
 
 		elif (
-			"pipeline:ShovelerPipeline:FastKafkaSource"
+			"pipeline:ShovelerPipeline:KafkaSource"
 			in asab.Config
 			and "connection:InfluxConnection"
 			in asab.Config
 		):
 			pipeline = [
-				fastkafka.FastKafkaSource(
+				bspump.kafka.KafkaSource(
 					app,
 					self,
-					"FastKafkaConnection",
-					id="FastKafkaSource",
+					"KafkaConnection",
+					id="KafkaSource",
 				),
 				bspump.influxdb.InfluxDBSink(
 					app, self, "InfluxConnection"

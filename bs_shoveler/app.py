@@ -6,7 +6,7 @@ import asab
 import asab.api
 import asab.zookeeper
 
-import fastkafka
+import bspump.kafka
 
 import logging
 
@@ -22,13 +22,13 @@ class BSShovelerApp(bspump.BSPumpApplication):
 			"bspump.PumpService"
 		)
 
-		fast_kafka_connection = (
-			fastkafka.FastKafkaConnection(
+		kafka_connection = (
+			bspump.kafka.KafkaConnection(
 				self, "FastKafkaConnection"
 			)
 		)
 		self.BSPumpService.add_connection(
-			fast_kafka_connection
+			kafka_connection
 		)
 
 		if "connection:ElasticSearchConnection" in asab.Config:
