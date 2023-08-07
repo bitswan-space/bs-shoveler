@@ -1,6 +1,6 @@
 FROM public.ecr.aws/h9w9d7v3/bspump:2023-39-git-8444683
 
-LABEL src=https://gitlab.com/LibertyAces/O2SK/ericsson-2g
+LABEL src=https://gitlab.com/LibertyAces/Product/bs-shoveler
 
 RUN set -ex \
 && apt-get -y update \
