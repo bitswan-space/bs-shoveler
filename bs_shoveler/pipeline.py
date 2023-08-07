@@ -109,4 +109,5 @@ class ShovelerPipeline(bspump.Pipeline):
 		else:
 			L.error("Please configure the pipeline")
 
+		print(pipeline)
 		self.build(*pipeline)

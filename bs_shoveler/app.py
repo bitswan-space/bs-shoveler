@@ -24,7 +24,7 @@ class BSShovelerApp(bspump.BSPumpApplication):
 
 		kafka_connection = (
 			bspump.kafka.KafkaConnection(
-				self, "FastKafkaConnection"
+				self, "KafkaConnection"
 			)
 		)
 		self.BSPumpService.add_connection(
@@ -53,13 +53,3 @@ class BSShovelerApp(bspump.BSPumpApplication):
 		self.BSPumpService.add_pipeline(
 			ShovelerPipeline(self, "ShovelerPipeline")
 		)
-
-		self.add_module(asab.web.Module)
-		self.ASABApiService = asab.api.ApiService(self)
-		self.ASABApiService.initialize_web()
-
-		# Initialize ZooKeeper Service
-		from asab.zookeeper import Module
-		self.add_module(Module)
-		self.ZooKeeperService = self.get_service("asab.ZooKeeperService")
-		self.ASABApiService.initialize_zookeeper(self.ZooKeeperService.DefaultContainer)
