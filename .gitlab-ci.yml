@@ -10,8 +10,11 @@ test flake8:
   script:
     - apt-get update
     - pip install --upgrade pip
-    - pip install flake8
-    - python3 -m flake8 bs_shoveler bs_shoveler.py
+    - pip install -r requirements-dev.txt
+    - pytest
+    - black bs_shoveler bs_shoveler.py
+    - ruff bs_shoveler bs_shoveler.py
+
 
 variables:
   DOCKER_IMAGE: bs-shoveler
