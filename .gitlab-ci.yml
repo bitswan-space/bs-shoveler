@@ -4,7 +4,7 @@ stages:
 
 test flake8:
   stage: test
-  image: python:3.8
+  image: teskalabs/bspump:nightly-py38
   tags:
     - docker
   script:
