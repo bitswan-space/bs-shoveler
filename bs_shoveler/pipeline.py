@@ -1,11 +1,13 @@
 import asab
 import bspump
+import logging
+import bspump.kafka
 import bspump.common
 import bspump.influxdb
 import bspump.elasticsearch
 
-import bspump.kafka
-import logging
+from .processors.convert_to_influx_string import InfluxStringConvertProcessor
+
 
 L = logging.getLogger(__name__)
 
@@ -16,23 +18,8 @@ class ShovelerPipeline(bspump.Pipeline):
 
         # TODO: need to rethink the rack if there will be a possibility, that one of
         # the connections does not exist. It causes error when connection is not located
-        # removing ES and Influx sinks from the rack for the moment.
-        shovel_rack = {
-            "sink": {
-                "Kafka": bspump.kafka.KafkaSink(
-                    app,
-                    self,
-                    "KafkaConnection",
-                    id="KafkaSink",
-                )
-            },
-            "utility": {
-                "JSONtoDICT": bspump.common.StdJsonToDictParser(app, self),
-                "DICTtoJSON": bspump.common.StdDictToJsonParser(app, self),
-                "BYTEStoSTRING": bspump.common.BytesToStringParser(app, self),
-                "STRINGtoBYTES": bspump.common.StringToBytesParser(app, self),
-            },
-        }
+        # removing ES:
+        # influx added
 
         if (
             "pipeline:ShovelerPipeline:KafkaSource" in asab.Config
@@ -45,8 +32,8 @@ class ShovelerPipeline(bspump.Pipeline):
                     "KafkaConnection",
                     id="KafkaSource",
                 ),
-                shovel_rack.get("utility").get("BYTEStoSTRING"),
-                shovel_rack.get("utility").get("JSONtoDICT"),
+                bspump.common.BytesToStringParser(app, self),
+                bspump.common.StdJsonToDictParser(app, self),
                 bspump.elasticsearch.ElasticSearchSink(
                     app, self, "ElasticSearchConnection"
                 ),
@@ -63,9 +50,14 @@ class ShovelerPipeline(bspump.Pipeline):
                     "ElasticSearchConnection",
                     id="ElasticSearchSource",
                 ),
-                shovel_rack.get("utility").get("DICTtoJSON"),
-                shovel_rack.get("utility").get("STRINGtoBYTES"),
-                shovel_rack.get("sink").get("Kafka"),
+                bspump.common.StdDictToJsonParser(app, self),
+                bspump.common.StringToBytesParser(app, self),
+                bspump.kafka.KafkaSink(
+                    app,
+                    self,
+                    "KafkaConnection",
+                    id="KafkaSink",
+                ),
             ]
 
         elif (
@@ -79,11 +71,58 @@ class ShovelerPipeline(bspump.Pipeline):
                     "KafkaConnection",
                     id="KafkaSource",
                 ),
+                bspump.common.BytesToStringParser(app, self),
+                bspump.common.StdJsonToDictParser(app, self),
+                bspump.common.PPrintProcessor(app, self),
+                InfluxStringConvertProcessor(app, self),
+                bspump.common.StringToBytesParser(app, self),
                 bspump.influxdb.InfluxDBSink(app, self, "InfluxConnection"),
             ]
 
+        elif (
+            "connection:KafkaConnectionSource" in asab.Config
+            and "pipeline:ShovelerPipeline:KafkaSource" in asab.Config
+            and "pipeline:ShovelerPipeline:KafkaSink" in asab.Config
+            and "connection:KafkaConnection" in asab.Config
+        ):
+            pipeline = [
+                bspump.kafka.KafkaSource(
+                    app,
+                    self,
+                    "KafkaConnectionSource",
+                    id="KafkaSource",
+                ),
+                bspump.common.BytesToStringParser(app, self),
+                bspump.common.StringToBytesParser(app, self),
+                bspump.kafka.KafkaSink(
+                    app,
+                    self,
+                    "KafkaConnection",
+                    id="KafkaSink",
+                ),
+            ]
+
+        elif (
+            "pipeline:ShovelerPipeline:KafkaSource" in asab.Config
+            and "pipeline:ShovelerPipeline:KafkaSink" in asab.Config
+        ):
+            pipeline = [
+                bspump.kafka.KafkaSource(
+                    app,
+                    self,
+                    "KafkaConnection",
+                    id="KafkaSource",
+                ),
+                bspump.common.BytesToStringParser(app, self),
+                bspump.common.StringToBytesParser(app, self),
+                bspump.kafka.KafkaSink(
+                    app,
+                    self,
+                    "KafkaConnection",
+                    id="KafkaSink",
+                ),
+            ]
         else:
             L.error("Please configure the pipeline")
 
-        print(pipeline)
         self.build(*pipeline)
