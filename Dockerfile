@@ -1,4 +1,4 @@
-FROM public.ecr.aws/h9w9d7v3/bspump:2023-39-git-8444683
+FROM public.registry.bitswan.space/h9w9d7v3/bspump:2023-39-git-8444683
 
 LABEL src=https://gitlab.com/LibertyAces/Product/bs-shoveler
 
