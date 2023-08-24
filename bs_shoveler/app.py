@@ -23,7 +23,14 @@ class BSShovelerApp(bspump.BSPumpApplication):
         kafka_connection = bspump.kafka.KafkaConnection(self, "KafkaConnection")
         self.BSPumpService.add_connection(kafka_connection)
 
-        if "connection:ElasticSearchConnection" in asab.Config:
+        if "connection:KafkaConnectionSource" in asab.Config:
+            kafka_connection_source = bspump.kafka.KafkaConnection(
+                self, "KafkaConnectionSource"
+            )
+
+            self.BSPumpService.add_connection(kafka_connection_source)
+
+        elif "connection:ElasticSearchConnection" in asab.Config:
             es_connection = bspump.elasticsearch.ElasticSearchConnection(
                 self, "ElasticSearchConnection"
             )
@@ -38,4 +45,6 @@ class BSShovelerApp(bspump.BSPumpApplication):
         else:
             L.error("Please add connection(s)")
 
-        self.BSPumpService.add_pipeline(ShovelerPipeline(self, "ShovelerPipeline"))
+        self.BSPumpService.add_pipeline(
+            ShovelerPipeline(self, "ShovelerPipeline")
+        )
