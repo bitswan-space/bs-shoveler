@@ -52,7 +52,10 @@ class InfluxStringConvertProcessor(bspump.Processor):
             # add fields obtained from the first event
             for field in self.event_fields:
                 # add field to fields nested dict in influx_string_dict the value is in event[field]
-                influx_string_dict["fields"][field] = event.get(field)
+                if(isinstance(event.get(field),int)):
+                    influx_string_dict["fields"][field] = float(event.get(field))
+                else:
+                    influx_string_dict["fields"][field] = event.get(field)
 
             influx_string_dict = [influx_string_dict]
 
@@ -135,14 +138,14 @@ def test_processor():
 
     assert (
         output_event
-        == "measurement,cell=cell1,site=site1 field1=1i,field2=2i,field3=3i,field4=4i,field5=5i,field6=6i 1546300800000000000\n"
+        == "measurement,cell=cell1,site=site1 field1=1.0,field2=2.0,field3=3.0,field4=4.0,field5=5.0,field6=6.0 1546300800000000000\n"
     )
 
     output_event2 = processor.process(None, event2)
 
     assert (
         output_event2
-        == "measurement,cell=cell1,site=site1 field1=32i,field2=32i,field3=32i,field4=32i,field5=32i,field6=32i 1546300800000000000\n"
+        == "measurement,cell=cell1,site=site1 field1=32.0,field2=32.0,field3=32.0,field4=32.0,field5=32.0,field6=32.0 1546300800000000000\n"
     )
 
     # check if new fields are not addded to the output event
@@ -164,5 +167,22 @@ def test_processor():
 
     assert (
         output_event3
-        == "measurement,cell=cell1,site=site1 field1=32i,field2=32i,field3=32i,field4=32i,field5=32i,field6=32i 1546300800000000000\n"
+        == "measurement,cell=cell1,site=site1 field1=32.0,field2=32.0,field3=32.0,field4=32.0,field5=32.0,field6=32.0 1546300800000000000\n"
+    )
+
+    event4 = {
+        "timestamp": "2019-01-01 00:00:00",
+        "site": "site1",
+        "cell": "cell1",
+        "field1": 32.0,
+        "field2": 32.0,
+        "field3": 32.0,
+        "field4": 0,
+    }
+
+    output_event4 = processor.process(None, event4)
+
+    assert (
+        output_event4
+        == "measurement,cell=cell1,site=site1 field1=32.0,field2=32.0,field3=32.0,field4=0.0 1546300800000000000\n"
     )
