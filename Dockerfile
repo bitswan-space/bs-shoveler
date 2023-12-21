@@ -1,4 +1,4 @@
-FROM public.registry.bitswan.space/h9w9d7v3/bspump:2023-39-git-8444683
+FROM bitswan/pipeline-runtime-environment:latest@sha256:be221ad4f2f17b803924651a5cef33f1493f147daafbf3e064f4a7a9eefe1cbb
 
 LABEL src=https://gitlab.com/LibertyAces/Product/bs-shoveler
 
