@@ -52,7 +52,7 @@ class InfluxStringConvertProcessor(bspump.Processor):
             # add fields obtained from the first event
             for field in self.event_fields:
                 # add field to fields nested dict in influx_string_dict the value is in event[field]
-                if(isinstance(event.get(field),int)):
+                if isinstance(event.get(field), int):
                     influx_string_dict["fields"][field] = float(event.get(field))
                 else:
                     influx_string_dict["fields"][field] = event.get(field)
@@ -79,9 +79,7 @@ class InfluxStringConvertProcessor(bspump.Processor):
 
     def get_timestamp(self, time):
         utc_time = datetime.strptime("{}".format(time), "%Y-%m-%d %H:%M:%S")
-        epoch_time = int(
-            (utc_time - datetime(1970, 1, 1)).total_seconds() * 1000000000
-        )
+        epoch_time = int((utc_time - datetime(1970, 1, 1)).total_seconds() * 1000000000)
         return epoch_time
 
 

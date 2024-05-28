@@ -45,6 +45,4 @@ class BSShovelerApp(bspump.BSPumpApplication):
         else:
             L.error("Please add connection(s)")
 
-        self.BSPumpService.add_pipeline(
-            ShovelerPipeline(self, "ShovelerPipeline")
-        )
+        self.BSPumpService.add_pipeline(ShovelerPipeline(self, "ShovelerPipeline"))
