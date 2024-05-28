@@ -9,7 +9,7 @@ jobs:
     runs-on: ubuntu-latest
 
     container:
-      image: python:3.8
+      image: bitswan/pipeline-runtime-environment:2024-9191238548-git-9ad90fc
     
     steps:
       - uses: actions/checkout@v2
