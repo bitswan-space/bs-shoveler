@@ -20,6 +20,12 @@ class ShovelerPipeline(bspump.Pipeline):
         # the connections does not exist. It causes error when connection is not located
         # removing ES:
         # influx added
+        addJqProcessor = False
+        pipeline = []
+
+        if "pipeline:ShovelerPipeline:JQProcessor" in asab.Config:
+            addJqProcessor = True
+            jqProcessor = bspump.common.JQProcessor(app, self)
 
         if (
             "pipeline:ShovelerPipeline:KafkaSource" in asab.Config
@@ -34,6 +40,7 @@ class ShovelerPipeline(bspump.Pipeline):
                 ),
                 bspump.common.BytesToStringParser(app, self),
                 bspump.common.StdJsonToDictParser(app, self),
+                *([jqProcessor] if addJqProcessor else []),
                 bspump.elasticsearch.ElasticSearchSink(
                     app, self, "ElasticSearchConnection"
                 ),
@@ -50,6 +57,7 @@ class ShovelerPipeline(bspump.Pipeline):
                     "ElasticSearchConnection",
                     id="ElasticSearchSource",
                 ),
+                *([jqProcessor] if addJqProcessor else []),
                 bspump.common.StdDictToJsonParser(app, self),
                 bspump.common.StringToBytesParser(app, self),
                 bspump.kafka.KafkaSink(
@@ -73,7 +81,7 @@ class ShovelerPipeline(bspump.Pipeline):
                 ),
                 bspump.common.BytesToStringParser(app, self),
                 bspump.common.StdJsonToDictParser(app, self),
-                bspump.common.PPrintProcessor(app, self),
+                *([jqProcessor] if addJqProcessor else []),
                 InfluxStringConvertProcessor(app, self),
                 bspump.common.StringToBytesParser(app, self),
                 bspump.influxdb.InfluxDBSink(app, self, "InfluxConnection"),
@@ -93,6 +101,15 @@ class ShovelerPipeline(bspump.Pipeline):
                     id="KafkaSource",
                 ),
                 bspump.common.BytesToStringParser(app, self),
+                *(
+                    [
+                        bspump.common.StdJsonToDictParser(app, self),
+                        jqProcessor,
+                        bspump.common.StdDictToJsonParser(app, self),
+                    ]
+                    if addJqProcessor
+                    else []
+                ),
                 bspump.common.StringToBytesParser(app, self),
                 bspump.kafka.KafkaSink(
                     app,
@@ -114,6 +131,15 @@ class ShovelerPipeline(bspump.Pipeline):
                     id="KafkaSource",
                 ),
                 bspump.common.BytesToStringParser(app, self),
+                *(
+                    [
+                        bspump.common.StdJsonToDictParser(app, self),
+                        jqProcessor,
+                        bspump.common.StdDictToJsonParser(app, self),
+                    ]
+                    if addJqProcessor
+                    else []
+                ),
                 bspump.common.StringToBytesParser(app, self),
                 bspump.kafka.KafkaSink(
                     app,
