@@ -100,17 +100,17 @@ class ShovelerPipeline(bspump.Pipeline):
                     "KafkaConnectionSource",
                     id="KafkaSource",
                 ),
-                bspump.common.BytesToStringParser(app, self),
                 *(
                     [
+                        bspump.common.BytesToStringParser(app, self),
                         bspump.common.StdJsonToDictParser(app, self),
                         jqProcessor,
                         bspump.common.StdDictToJsonParser(app, self),
+                        bspump.common.StringToBytesParser(app, self),
                     ]
                     if addJqProcessor
                     else []
                 ),
-                bspump.common.StringToBytesParser(app, self),
                 bspump.kafka.KafkaSink(
                     app,
                     self,
@@ -130,17 +130,17 @@ class ShovelerPipeline(bspump.Pipeline):
                     "KafkaConnection",
                     id="KafkaSource",
                 ),
-                bspump.common.BytesToStringParser(app, self),
                 *(
                     [
+                        bspump.common.BytesToStringParser(app, self),
                         bspump.common.StdJsonToDictParser(app, self),
                         jqProcessor,
                         bspump.common.StdDictToJsonParser(app, self),
+                        bspump.common.StringToBytesParser(app, self),
                     ]
                     if addJqProcessor
                     else []
                 ),
-                bspump.common.StringToBytesParser(app, self),
                 bspump.kafka.KafkaSink(
                     app,
                     self,
